@@ -173,6 +173,17 @@ namespace Tests
             Assert.AreEqual(solver.Sudoku, solution.Sudoku);
         }
 
+        [Test]
+        public void ExtremeSudokuTest()
+        {
+            var solver = new Solver(GetExtremeSudokuContent());
+            solver.Solve();
+
+            var solution = new Solver(GetExtremeSudokuSolution());
+
+            Assert.AreEqual(solver.Sudoku, solution.Sudoku);
+        }
+
         private string GetEasySudokuContent()
         {
             return "8,2,*,*,4,*,*,6,*;" +
@@ -223,6 +234,32 @@ namespace Tests
                    "1,5,7,8,3,2,4,9,6;" +
                    "3,9,6,7,4,5,2,1,8;" +
                    "2,8,4,1,9,6,7,5,3;";
+        }
+
+        private string GetExtremeSudokuContent()
+        {
+            return "*,*,*,*,*,1,*,7,*;" +
+                   "3,2,*,*,7,*,*,*,4;" +
+                   "6,*,*,*,*,*,*,*,*;" +
+                   "7,4,*,*,1,*,*,*,3;" +
+                   "*,*,8,*,*,*,*,*,*;" +
+                   "*,*,*,5,*,*,9,*,*;" +
+                   "*,*,6,*,2,*,*,*,*;" +
+                   "2,8,*,*,*,9,3,*,*;" +
+                   "*,*,1,*,*,*,*,*,8;";
+        }
+
+        private string GetExtremeSudokuSolution()
+        {
+            return "8,5,4,3,9,1,6,7,2;" +
+                   "3,2,9,6,7,5,1,8,4;" +
+                   "6,1,7,8,4,2,5,3,9;" +
+                   "7,4,2,9,1,6,8,5,3;" +
+                   "5,9,8,2,3,7,4,1,6;" +
+                   "1,6,3,5,8,4,9,2,7;" +
+                   "4,3,6,1,2,8,7,9,5;" +
+                   "2,8,5,7,6,9,3,4,1;" +
+                   "9,7,1,4,5,3,2,6,8;";
         }
     }
 }
