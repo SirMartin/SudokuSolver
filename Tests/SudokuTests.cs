@@ -146,7 +146,7 @@ namespace Tests
         [Test]
         public void SolvedSudokuTest()
         {
-            var solver = new Solver(GetSolvedSudokuContent());
+            var solver = new Solver(GetEasySudokuSolution());
 
             Assert.IsTrue(solver.IsSolved);
         }
