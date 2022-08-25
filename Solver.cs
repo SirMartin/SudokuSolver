@@ -46,14 +46,19 @@ namespace SudokuSolver
 
         public void PrintSudoku()
         {
+            Console.WriteLine();
+
             for (var i = 0; i < 9; i++)
             {
                 for (var j = 0; j < 9; j++)
                 {
-                    Console.Write($" {Sudoku[i, j]} ");
+                    var number = Sudoku[i, j].HasValue ? Sudoku[i, j].Value.ToString() : "-";
+                    Console.Write($" {number} ");
                 }
                 Console.WriteLine("");
             }
+
+            Console.WriteLine();
         }
 
         internal static int[] SolveColumn(int?[] col)
@@ -145,12 +150,37 @@ namespace SudokuSolver
 
         internal void Solve()
         {
+            var iteration = 0;
             while (!IsSolved)
             {
-                for (int i = 0; i < 9; i++)
+                for (int r = 0; r < 9; r++)
                 {
+                    for (int c = 0; c < 9; c++)
+                    {
+                        if (Sudoku[r, c] != null)
+                            continue;
 
+                        var col = GetColumn(c);
+                        var colResults = SolveColumn(col);
+                        var row = GetRow(r);
+                        var rowResults = SolveRow(row);
+                        var square = GetSquare(r, c);
+                        var squareResults = SolveSquare(square);
+
+                        var colAndRowResults = colResults.Intersect(rowResults);
+                        var possibleResults = colAndRowResults.Intersect(squareResults);
+
+                        if (possibleResults.Count() == 1)
+                        {
+                            Sudoku[r, c] = possibleResults.First();
+                        }
+                    }
                 }
+
+                iteration++;
+                Console.WriteLine($"Round {iteration}:");
+                PrintSudoku();
+                Console.WriteLine("-------------------------------------------");
             }
         }
     }
