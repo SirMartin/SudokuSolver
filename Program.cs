@@ -14,4 +14,4 @@ var content = "8,2,*,*,4,*,*,6,*;" +
             "3,*,*,*,2,8,*,5,1;";
 
 var solver = new Solver(content);
-solver.PrintSudoku();
+solver.Solve();
