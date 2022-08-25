@@ -151,6 +151,30 @@ namespace Tests
             Assert.IsTrue(solver.IsSolved);
         }
 
+        [Test]
+        public void EasySudokuTest()
+        {
+            var solver = new Solver(GetEasySudokuContent());
+            solver.Solve();
+
+            var solution = new Solver(GetEasySudokuSolution());
+
+            Assert.AreEqual(solver.Sudoku, solution.Sudoku);
+        }
+
+        private string GetEasySudokuSolution()
+        {
+            return "8,2,7,5,4,9,1,6,3;" +
+                   "5,3,1,6,7,2,8,9,4;" +
+                   "6,4,9,8,3,1,5,2,7;" +
+                   "4,9,6,1,5,7,3,8,2;" +
+                   "2,1,8,3,9,6,4,7,5;" +
+                   "7,5,3,2,8,4,9,1,6;" +
+                   "9,6,2,4,1,5,7,3,8;" +
+                   "1,8,5,7,6,3,2,4,9;" +
+                   "3,7,4,9,2,8,6,5,1;";
+        }
+
         private string GetEasySudokuContent()
         {
             return "8,2,*,*,4,*,*,6,*;" +
