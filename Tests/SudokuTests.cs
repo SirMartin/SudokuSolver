@@ -98,10 +98,42 @@ namespace Tests
         {
             var solver = new Solver(GetEasySudokuContent());
 
-            var selectedRow = solver.GetSquare(8);
+            var selectedSquare = solver.GetSquare(1, 1);
 
-            Assert.AreEqual(new int?[,] { { null, null, 8 }, { 2, null, null }, { null, 5, 1 } }, selectedRow);
+            Assert.AreEqual(new int?[,] { { 8, 2, null }, { null, null, 1 }, { null, null, 9 } }, selectedSquare);
         }
+
+        [Test]
+        public void AnotherGetSudokuSquareTest()
+        {
+            var solver = new Solver(GetEasySudokuContent());
+
+            var selectedSquare = solver.GetSquare(5, 5);
+
+            Assert.AreEqual(new int?[,] { { 1, 5, 7 }, { null, null, null }, { null, null, 4 } }, selectedSquare);
+        }
+
+
+        [Test]
+        public void OneMoreGetSudokuSquareTest()
+        {
+            var solver = new Solver(GetEasySudokuContent());
+
+            var selectedSquare = solver.GetSquare(6, 3);
+
+            Assert.AreEqual(new int?[,] { { 4, 1, 5 }, { 7, 6, 3 }, { null, 2, 8 } }, selectedSquare);
+        }
+
+        [Test]
+        public void EvenOneMoreGetSudokuSquareTest()
+        {
+            var solver = new Solver(GetEasySudokuContent());
+
+            var selectedSquare = solver.GetSquare(8, 7);
+
+            Assert.AreEqual(new int?[,] { { null, null, 8 }, { 2, null, null }, { null, 5, 1 } }, selectedSquare);
+        }
+                
 
         [Test]
         public void NotSolvedSudokuTest()

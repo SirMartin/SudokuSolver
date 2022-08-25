@@ -126,26 +126,18 @@ namespace SudokuSolver
             return result.ToArray();
         }
 
-        internal int?[,] GetSquare(int s)
+        internal int?[,] GetSquare(int row, int col)
         {
             var result = new int?[3, 3];
 
-            var row = s / 3;
-            var col = s % 3;
-
-            //for (int r = row * 3; r < (row * 3) + 3; r++)
-            //{
-            //    for (int c = col * 3; c < (col * 3) + 3; c++)
-            //    {
-
-            //    }
-            //}
+            var initial_row = (row / 3);
+            var initial_col = (col / 3);
 
             for (int r = 0; r < 3; r++)
             {
                 for (int c = 0; c < 3; c++)
                 {
-                    result[r, c] = Sudoku[(row * 3) + r, (col * 3) + c];
+                    result[r, c] = Sudoku[(initial_row * 3) + r, (initial_col * 3) + c];
                 }
             }
             return result;
