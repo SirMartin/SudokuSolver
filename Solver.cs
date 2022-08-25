@@ -1,4 +1,6 @@
-﻿namespace SudokuSolver
+﻿using System.Linq;
+
+namespace SudokuSolver
 {
     internal class Solver
     {
@@ -7,6 +9,22 @@
         public Solver(string sudokuContent)
         {
             Sudoku = ParseSudoku(sudokuContent);
+        }
+
+        internal bool IsSolved
+        {
+            get
+            {
+                for (int i = 0; i < 9; i++)
+                {
+                    for (int j = 0; j < 9; j++)
+                    {
+                        if (Sudoku[i, j] == null)
+                            return false;
+                    }
+                }
+                return true;
+            }
         }
 
         private int?[,] ParseSudoku(string sudokuContent)
@@ -84,9 +102,64 @@
             return possibleSolutions.ToArray();
         }
 
+        internal int?[] GetColumn(int c)
+        {
+            var result = new List<int?>();
+
+            for (int i = 0; i < 9; i++)
+            {
+                result.Add(Sudoku[i, c]);
+            }
+
+            return result.ToArray();
+        }
+
+        internal int?[] GetRow(int r)
+        {
+            var result = new List<int?>();
+
+            for (int i = 0; i < 9; i++)
+            {
+                result.Add(Sudoku[r, i]);
+            }
+
+            return result.ToArray();
+        }
+
+        internal int?[,] GetSquare(int s)
+        {
+            var result = new int?[3, 3];
+
+            var row = s / 3;
+            var col = s % 3;
+
+            //for (int r = row * 3; r < (row * 3) + 3; r++)
+            //{
+            //    for (int c = col * 3; c < (col * 3) + 3; c++)
+            //    {
+
+            //    }
+            //}
+
+            for (int r = 0; r < 3; r++)
+            {
+                for (int c = 0; c < 3; c++)
+                {
+                    result[r, c] = Sudoku[(row * 3) + r, (col * 3) + c];
+                }
+            }
+            return result;
+        }
+
         internal void Solve()
         {
-            throw new NotImplementedException();
+            while (!IsSolved)
+            {
+                for (int i = 0; i < 9; i++)
+                {
+
+                }
+            }
         }
     }
 }
