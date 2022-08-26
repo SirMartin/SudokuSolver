@@ -50,15 +50,23 @@ namespace SudokuSolver
 
             for (var i = 0; i < 9; i++)
             {
+                if (i % 3 == 0)
+                {
+                    Console.WriteLine("-----------------------------");
+                }
                 for (var j = 0; j < 9; j++)
                 {
+                    if (j % 3 == 0)
+                    {
+                        Console.Write("|");
+                    }
                     var number = Sudoku[i, j].HasValue ? Sudoku[i, j].Value.ToString() : "-";
                     Console.Write($" {number} ");
                 }
                 Console.WriteLine("");
             }
 
-            Console.WriteLine();
+            Console.WriteLine("-----------------------------");
         }
 
         internal static int[] SolveColumn(int?[] col)
@@ -148,40 +156,112 @@ namespace SudokuSolver
             return result;
         }
 
+        private IEnumerable<int> GetBoxPossibleResults(int r, int c)
+        {
+            var col = GetColumn(c);
+            var colResults = SolveColumn(col);
+            var row = GetRow(r);
+            var rowResults = SolveRow(row);
+            var square = GetSquare(r, c);
+            var squareResults = SolveSquare(square);
+
+            var colAndRowResults = colResults.Intersect(rowResults);
+            var possibleResults = colAndRowResults.Intersect(squareResults);
+            return possibleResults;
+        }
+
         internal void Solve()
         {
+            Dictionary<int, int> options;
+            var solvedLastIteration = 0;
             var iteration = 0;
             while (!IsSolved)
             {
+                options = new Dictionary<int, int>();
+                solvedLastIteration = 0;
                 for (int r = 0; r < 9; r++)
                 {
                     for (int c = 0; c < 9; c++)
                     {
                         if (Sudoku[r, c] != null)
                             continue;
+                        var possibleResults = GetBoxPossibleResults(r, c);
 
-                        var col = GetColumn(c);
-                        var colResults = SolveColumn(col);
-                        var row = GetRow(r);
-                        var rowResults = SolveRow(row);
-                        var square = GetSquare(r, c);
-                        var squareResults = SolveSquare(square);
-
-                        var colAndRowResults = colResults.Intersect(rowResults);
-                        var possibleResults = colAndRowResults.Intersect(squareResults);
+                        if (!options.ContainsKey(possibleResults.Count()))
+                        {
+                            options.Add(possibleResults.Count(), 0);
+                        }
+                        options[possibleResults.Count()]++;
 
                         if (possibleResults.Count() == 1)
                         {
+                            solvedLastIteration++;
                             Sudoku[r, c] = possibleResults.First();
+                            continue;
+                        }
+
+                        // Look for other solution options. Try to cheack all the rest of boxes in the column, row or square,
+                        // if any othercan have some of the numbers selected as solution for this box.
+
+                        // Check in the row.
+                        var list = new List<IEnumerable<int>>();
+                        var rowPossibleResults = possibleResults;
+                        for (int i = 0; i < 9; i++)
+                        {
+                            if (Sudoku[r, i].HasValue || c == i)
+                                continue;
+
+                            var boxPossibleResults = GetBoxPossibleResults(r, i);
+                            list.Add(boxPossibleResults);
+                        }
+
+                        var allResultsForRow = list.SelectMany(x => x).Distinct();
+                        rowPossibleResults = rowPossibleResults.Except(allResultsForRow);
+
+                        if (rowPossibleResults.Count() == 1)
+                        {
+                            solvedLastIteration++;
+                            Sudoku[r, c] = rowPossibleResults.First();
+                            continue;
+                        }
+
+                        // Check in the column.
+                        list = new List<IEnumerable<int>>();
+                        var colPossibleResults = possibleResults;
+                        for (int i = 0; i < 9; i++)
+                        {
+                            if (Sudoku[i, c].HasValue || r == i)
+                                continue;
+
+                            var boxPossibleResults = GetBoxPossibleResults(i, c);
+                            list.Add(boxPossibleResults);
+                        }
+
+                        var allResultsForColumn = list.SelectMany(x => x).Distinct();
+                        colPossibleResults = colPossibleResults.Except(allResultsForColumn);
+
+                        if (colPossibleResults.Count() == 1)
+                        {
+                            solvedLastIteration++;
+                            Sudoku[r, c] = colPossibleResults.First();
+                            continue;
                         }
                     }
                 }
 
+                Console.WriteLine($"Options:");
+                foreach (var item in options.OrderBy(x => x.Key))
+                {
+                    Console.WriteLine($"{item.Key}: {item.Value}");
+                }
+
                 iteration++;
                 Console.WriteLine($"Round {iteration}:");
+                Console.WriteLine($"Solved this iteration: {solvedLastIteration}");
                 PrintSudoku();
-                Console.WriteLine("-------------------------------------------");
+                Console.WriteLine("#########################################################");
             }
         }
+
     }
 }
