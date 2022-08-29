@@ -174,7 +174,19 @@ namespace Tests
         }
 
         [Test]
-        [Ignore("Cannot be completed!")]
+        [Ignore("Cannot be completed yet!")]
+        public void ReallyHardSudokuTest()
+        {
+            var solver = new Solver(GetReallyHardSudokuContent());
+            solver.Solve();
+
+            var solution = new Solver(GetReallyHardSudokuSolution());
+
+            Assert.AreEqual(solver.Sudoku, solution.Sudoku);
+        }
+
+        [Test]
+        [Ignore("Cannot be completed yet!")]
         public void ExtremeSudokuTest()
         {
             var solver = new Solver(GetExtremeSudokuContent());
@@ -235,6 +247,32 @@ namespace Tests
                    "1,5,7,8,3,2,4,9,6;" +
                    "3,9,6,7,4,5,2,1,8;" +
                    "2,8,4,1,9,6,7,5,3;";
+        }
+
+        private string GetReallyHardSudokuContent()
+        {
+            return "5,*,2,3,*,7,8,*,1;" +
+                   "*,*,*,*,*,*,*,*,*;" +
+                   "6,*,*,8,*,2,*,*,9;" +
+                   "3,*,7,*,*,*,2,*,8;" +
+                   "*,*,*,*,5,*,*,*,*;" +
+                   "2,*,1,*,*,*,4,*,5;" +
+                   "4,*,*,1,*,6,*,*,3;" +
+                   "*,*,*,*,*,*,*,*,*;" +
+                   "7,*,5,4,*,8,6,*,2;";
+        }
+
+        private string GetReallyHardSudokuSolution()
+        {
+            return "5,4,2,3,9,7,8,6,1;" +
+                   "8,1,9,5,6,4,3,2,7;" +
+                   "6,7,3,8,1,2,5,4,9;" +
+                   "3,5,7,6,4,1,2,9,8;" +
+                   "9,8,4,2,5,3,1,7,6;" +
+                   "2,6,1,7,8,9,4,3,5;" +
+                   "4,2,8,1,7,6,9,5,3;" +
+                   "1,3,6,9,2,5,7,8,4;" +
+                   "7,9,5,4,3,8,6,1,2;";
         }
 
         private string GetExtremeSudokuContent()

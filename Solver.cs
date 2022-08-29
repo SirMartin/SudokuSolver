@@ -246,6 +246,33 @@ namespace SudokuSolver
                             Sudoku[r, c] = colPossibleResults.First();
                             continue;
                         }
+
+                        // Check in the square.
+                        list = new List<IEnumerable<int>>();
+                        var squarePossibleResults = possibleResults;
+                        var square = GetSquare(r, c);
+                        for (int i = 0; i < square.GetLength(0); i++)
+                        {
+                            for (int j = 0; j < square.GetLength(1); j++)
+                            {
+                                var x = square[i, j];
+                                if (x.HasValue || (i == r % 3 && j == c % 3))
+                                    continue;
+
+                                var boxPossibleResults = GetBoxPossibleResults(i, j);
+                                list.Add(boxPossibleResults);
+                            }
+                        }
+                        
+                        var allResultsForSquare = list.SelectMany(x => x).Distinct();
+                        squarePossibleResults = squarePossibleResults.Except(allResultsForSquare);
+
+                        if (squarePossibleResults.Count() == 1)
+                        {
+                            solvedLastIteration++;
+                            Sudoku[r, c] = squarePossibleResults.First();
+                            continue;
+                        }
                     }
                 }
 
